@@ -12,201 +12,196 @@ class ExpenseTrackerApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Expense Tracker',
-      home: const ExpenseHomePage(),
+
+      // Named Routes
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomeScreen(),
+        '/profile': (context) => const ProfileScreen(),
+      },
     );
   }
 }
 
-class ExpenseHomePage extends StatelessWidget {
-  const ExpenseHomePage({super.key});
+// HOME SCREEN
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    // MediaQuery
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
-    // Orientation
-    Orientation orientation = MediaQuery.of(context).orientation;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Expense Tracker"),
         centerTitle: true,
       ),
 
-      body: LayoutBuilder(
-        builder: (context, constraints) {
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
 
-          // LayoutBuilder
-          bool isTablet = constraints.maxWidth >= 600;
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-
-                // Screen information
-                Text(
-                  "Screen: ${width.toStringAsFixed(0)} × ${height.toStringAsFixed(0)}",
-                  style: const TextStyle(fontSize: 16),
-                ),
-
-                const SizedBox(height: 15),
-
-                Text(
-                  orientation == Orientation.portrait
-                      ? "Portrait Mode"
-                      : "Landscape Mode",
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Responsive Container using MediaQuery
-                Container(
-                  width: width * 0.8,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.account_balance_wallet,
-                        size: 45,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Total Balance",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        "₹10,000",
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 30),
-
-                // Expanded Widget
-                Row(
-                  children: [
-
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(15),
-                        child: const Column(
-                          children: [
-                            Icon(
-                              Icons.arrow_downward,
-                              color: Colors.green,
-                              size: 35,
-                            ),
-                            Text(
-                              "Income",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            Text(
-                              "₹15,000",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(15),
-                        child: const Column(
-                          children: [
-                            Icon(
-                              Icons.arrow_upward,
-                              color: Colors.red,
-                              size: 35,
-                            ),
-                            Text(
-                              "Expense",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            Text(
-                              "₹5,000",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 25),
-
-                // LayoutBuilder responsive text
-                Text(
-                  isTablet
-                      ? "Tablet Layout"
-                      : "Mobile Layout",
-                  style: TextStyle(
-                    fontSize: isTablet ? 30 : 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.shopping_cart,
-                        size: 30,
-                      ),
-                      SizedBox(width: 15),
-                      Text(
-                        "Shopping     ₹2,000",
-                        style: TextStyle(fontSize: 17),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text("Add Expense"),
-                ),
-              ],
+            const Icon(
+              Icons.account_balance_wallet,
+              size: 70,
+              color: Colors.blue,
             ),
-          );
-        },
+
+            const SizedBox(height: 20),
+
+            const Text(
+              "Total Balance",
+              style: TextStyle(fontSize: 20),
+            ),
+
+            const Text(
+              "₹10,000",
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            // Navigator.push()
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddExpenseScreen(
+                      expenseName: "Shopping",
+                    ),
+                  ),
+                );
+              },
+              child: const Text("Add Expense"),
+            ),
+
+            const SizedBox(height: 15),
+
+            // Named Route
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              child: const Text("Go to Profile"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// SECOND SCREEN
+class AddExpenseScreen extends StatelessWidget {
+  final String expenseName;
+
+  const AddExpenseScreen({
+    super.key,
+    required this.expenseName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Add Expense"),
+      ),
+
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+
+            const Icon(
+              Icons.shopping_cart,
+              size: 60,
+              color: Colors.red,
+            ),
+
+            const SizedBox(height: 20),
+
+            const Text(
+              "Expense Details",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            // Passed data
+            Text(
+              "Expense: $expenseName",
+              style: const TextStyle(fontSize: 20),
+            ),
+
+            const Text(
+              "Amount: ₹2,000",
+              style: TextStyle(fontSize: 20),
+            ),
+
+            const SizedBox(height: 30),
+
+            // Navigator.pop()
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Back to Home"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// PROFILE SCREEN
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Profile"),
+      ),
+
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+
+            const Icon(
+              Icons.person,
+              size: 80,
+              color: Colors.blue,
+            ),
+
+            const SizedBox(height: 20),
+
+            const Text(
+              "Expense Tracker User",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Back"),
+            ),
+          ],
+        ),
       ),
     );
   }
