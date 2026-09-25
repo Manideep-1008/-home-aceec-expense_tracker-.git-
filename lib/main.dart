@@ -12,47 +12,85 @@ class ExpenseTrackerApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Expense Tracker',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Expense Tracker"),
-          centerTitle: true,
-        ),
+      home: const ExpenseHomePage(),
+    );
+  }
+}
 
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
+class ExpenseHomePage extends StatelessWidget {
+  const ExpenseHomePage({super.key});
 
-              // STACK WIDGET
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    height: 160,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+  @override
+  Widget build(BuildContext context) {
+
+    // MediaQuery
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    // Orientation
+    Orientation orientation = MediaQuery.of(context).orientation;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Expense Tracker"),
+        centerTitle: true,
+      ),
+
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+
+          // LayoutBuilder
+          bool isTablet = constraints.maxWidth >= 600;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+
+                // Screen information
+                Text(
+                  "Screen: ${width.toStringAsFixed(0)} × ${height.toStringAsFixed(0)}",
+                  style: const TextStyle(fontSize: 16),
+                ),
+
+                const SizedBox(height: 15),
+
+                Text(
+                  orientation == Orientation.portrait
+                      ? "Portrait Mode"
+                      : "Landscape Mode",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
 
-                  Column(
+                const SizedBox(height: 20),
+
+                // Responsive Container using MediaQuery
+                Container(
+                  width: width * 0.8,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.account_balance_wallet,
                         size: 45,
                         color: Colors.white,
                       ),
-
-                      const Text(
+                      Text(
                         "Total Balance",
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,
                         ),
                       ),
-
-                      const Text(
+                      Text(
                         "₹10,000",
                         style: TextStyle(
                           fontSize: 28,
@@ -62,106 +100,113 @@ class ExpenseTrackerApp extends StatelessWidget {
                       ),
                     ],
                   ),
-                ],
-              ),
-
-              const SizedBox(height: 30),
-
-              // ROW WIDGET
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-
-                  // INCOME
-                  Column(
-                    children: [
-                      const Icon(
-                        Icons.arrow_downward,
-                        size: 35,
-                        color: Colors.green,
-                      ),
-                      const Text(
-                        "Income",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      const Text(
-                        "₹15,000",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // EXPENSE
-                  Column(
-                    children: [
-                      const Icon(
-                        Icons.arrow_upward,
-                        size: 35,
-                        color: Colors.red,
-                      ),
-                      const Text(
-                        "Expense",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      const Text(
-                        "₹5,000",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 35),
-
-              // TEXT WIDGET
-              const Text(
-                "Recent Expenses",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
-              // CONTAINER WIDGET
-              Container(
-                padding: const EdgeInsets.all(15),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Row(
+                // Expanded Widget
+                Row(
                   children: [
-                    Icon(
-                      Icons.shopping_cart,
-                      size: 30,
+
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        child: const Column(
+                          children: [
+                            Icon(
+                              Icons.arrow_downward,
+                              color: Colors.green,
+                              size: 35,
+                            ),
+                            Text(
+                              "Income",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            Text(
+                              "₹15,000",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 15),
-                    Text(
-                      "Shopping        ₹2,000",
-                      style: TextStyle(fontSize: 17),
+
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        child: const Column(
+                          children: [
+                            Icon(
+                              Icons.arrow_upward,
+                              color: Colors.red,
+                              size: 35,
+                            ),
+                            Text(
+                              "Expense",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            Text(
+                              "₹5,000",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 25),
 
-              // ELEVATED BUTTON
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text("Add Expense"),
-              ),
-            ],
-          ),
-        ),
+                // LayoutBuilder responsive text
+                Text(
+                  isTablet
+                      ? "Tablet Layout"
+                      : "Mobile Layout",
+                  style: TextStyle(
+                    fontSize: isTablet ? 30 : 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.shopping_cart,
+                        size: 30,
+                      ),
+                      SizedBox(width: 15),
+                      Text(
+                        "Shopping     ₹2,000",
+                        style: TextStyle(fontSize: 17),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text("Add Expense"),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
